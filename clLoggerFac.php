@@ -1,9 +1,14 @@
 <?php declare (strict_types = 1);
 
-namespace LoggerFramework;
+namespace php_logger;
 
-use LoggerFramework\IFFactory as IFFactory;
-use LoggerFramework\Logger as Logger;
+require_once SITE_ROOT . "/php_logger/ifLogger.php";
+require_once SITE_ROOT . "/php_logger/ifLoggerFac.php";
+require_once SITE_ROOT . "/php_logger/clLogger.php";
+
+use php_logger\IFFactory as IFFactory;
+use php_logger\IFLogger as IFLogger;
+use php_logger\Logger as Logger;
 
 /**
  * Logger Factory
@@ -46,12 +51,10 @@ class Factory implements IFFactory
      * @param int loglevel - default Error
      * @return Logger      - File Logger
      */
-    public function getLogger(int $loglevel = IFLogger::ERROR_LEVEL ): IFLogger
+    public function get(int $loglevel = IFLogger::ERROR_LEVEL ): IFLogger
     {
         if (!$this->logger) {
-            $ll = getenv('LOGLEVEL'); // read the loglevel from enviroment
-            $this->logger = new Logger($ll);
-            $this->logger->trace("Loglevel was set to:".$ll);
+            $this->logger = new Logger($loglevel);
         }
         return $this->logger;
     }

@@ -1,8 +1,9 @@
 <?php declare (strict_types = 1);
 
-namespace LoggerFramework;
+namespace php_logger;
 
-use LoggerFramework\IFLogger as IFLogger;
+require_once SITE_ROOT . "/php_logger/ifLogger.php";
+use php_logger\IFLogger as IFLogger;
 
 /**
  * Implementation of Logger Interface
@@ -16,16 +17,10 @@ use LoggerFramework\IFLogger as IFLogger;
     private const logfile = "/logs/logging.log";
     private $logLevel;
 
-    protected $_levels = array( 'TRACE' => 0,
-                                'DEBUG' => 10,
-                                'INFO'  => 20,
-                                'WARNING' => 30,
-                                'ERROR' => 40,
-                                'FATAL' => 50);
 
-    public function __construct(string $logLevel = "ERROR")
+    public function __construct( int $logLevel )
     {
-        $this->logLevel = $this->_levels[$logLevel];
+        $this->logLevel = $logLevel;
     }
 
 
@@ -38,7 +33,7 @@ use LoggerFramework\IFLogger as IFLogger;
      */
     public function trace($msg)
     {
-        if( $this->logLevel == $this->_levels['TRACE'] ){
+        if( $this->logLevel == IFLogger::TRACE_LEVEL ){
             $this->save(" TRACE - " . $this->render($msg));
         }
     }
@@ -53,7 +48,7 @@ use LoggerFramework\IFLogger as IFLogger;
      */
     public function debug($msg)
     {
-        if( $this->logLevel <= $this->_levels['DEBUG'] ){
+        if( $this->logLevel <= IFLogger::DEBUG_LEVEL ){
             $this->save(" DEBUG - " . $this->render($msg));
         }
     }
@@ -67,7 +62,7 @@ use LoggerFramework\IFLogger as IFLogger;
      */
     public function info($msg)
     {
-        if( $this->logLevel <= $this->_levels['INFO'] ){
+        if( $this->logLevel <= IFLogger::INFO_LEVEL ){
             $this->save(" INFO  - " . $this->render($msg));
         }
     }
@@ -81,7 +76,7 @@ use LoggerFramework\IFLogger as IFLogger;
      */
     public function warning($msg)
     {
-        if( $this->logLevel <= $this->_levels['WARNING'] ){
+        if( $this->logLevel <= IFLogger::WARNING_LEVEL ){
             $this->save(" WARN  - " . $this->render($msg));
         }
     }
@@ -95,7 +90,7 @@ use LoggerFramework\IFLogger as IFLogger;
      */
     public function error($msg)
     {
-        if( $this->logLevel <= $this->_levels['ERROR'] ){
+        if( $this->logLevel <= IFLogger::ERROR_LEVEL ){
             $this->save(" ERROR - " . $this->render($msg));
         }
     }
@@ -109,7 +104,7 @@ use LoggerFramework\IFLogger as IFLogger;
      */
     public function fatal($msg)
     {
-        if( $this->logLevel <= $this->_levels['FATAL'] ){
+        if( $this->logLevel <= IFLogger::FATAL_LEVEL ){
             $this->save(" FATAL - " . $this->render($msg));
         }
     }
@@ -123,8 +118,7 @@ use LoggerFramework\IFLogger as IFLogger;
     private function render($any): string
     {
         $type = gettype($any);
-        print_r($any);
-
+        
         switch ($type) {
 
             case 'object':
@@ -154,10 +148,11 @@ use LoggerFramework\IFLogger as IFLogger;
     private function getHierarchy(): string
     {
         $dbTrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
+        //print_r($dbTrace); - print stacktrace
 
         for($i = 0; $i < count($dbTrace); $i++) {
 
-            if($dbTrace[$i]['file'] != "/app/clLogger.php"){
+            if($dbTrace[$i]['file'] != "/app/php_logger/clLogger.php"){
 
                 $funcName = $this->getCallerFunction($dbTrace, $i);
                 

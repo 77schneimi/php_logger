@@ -1,16 +1,15 @@
 <?php declare (strict_types = 1);
 
-namespace LoggerFramework;
+namespace php_logger;
 
 /**
  * Logger Interface
  *  
  * @author     77schneimi
  */
-
 interface IFLogger {
     
-    public const TRACE_LEVEL   = 00;
+    const TRACE_LEVEL   = 00;
     const DEBUG_LEVEL   = 10;
     const INFO_LEVEL    = 20;
     const WARNING_LEVEL = 30;
