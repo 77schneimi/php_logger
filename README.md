@@ -13,3 +13,5 @@ It can be used to embedd it in another php application.
 + _warning_ - something went wrong but application can continue
 + _error_   - a mistake happes, this can be critical
 + _fatal_   - worst cas of error. application will stop
+
+You find this in File `LogLevel.php`.
